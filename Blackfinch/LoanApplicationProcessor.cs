@@ -2,17 +2,16 @@ namespace Blackfinch;
 
 public class LoanApplicationProcessor
 {
-  private IApplicationRule applicationRules;
+  private List<IApplicationRule> _applicationRules = [];
 
   public LoanApplicationProcessor()
   {
-    applicationRules =
-      new LoanWithinRangeRule(
-        new HighValueLoanRule(
-          new LtvLessThan60PercentRule(
-            new LtvBetween60And79PercentRule(
-              new LtvBetween80And89PercentRule(
-                new RejectRule(null))))));
+    _applicationRules.Add(new LoanWithinRangeRule());
+    _applicationRules.Add(new HighValueLoanRule());
+    _applicationRules.Add(new LtvLessThan60PercentRule());
+    _applicationRules.Add(new LtvBetween60And79PercentRule());
+    _applicationRules.Add(new LtvBetween80And89PercentRule());
+    _applicationRules.Add(new LtvGreaterThan90Rule());
   }
 
   public bool? Process(
@@ -20,6 +19,11 @@ public class LoanApplicationProcessor
     decimal assetValue,
     int creditScore)
   {
-    return applicationRules.Process(loanAmount, assetValue, creditScore);
+    foreach (var rule in _applicationRules)
+    {
+      var result = rule.Process(loanAmount, assetValue, creditScore);
+      if (result.HasValue) return result.Value;
+    }
+    return false;
   }
 }
