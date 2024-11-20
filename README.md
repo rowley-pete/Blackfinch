@@ -3,3 +3,5 @@ Got carried away, once I'd started I needed to finish and I wrote the tests so I
 Not happy with the result, used Chain of Responsibility pattern but I'm not fond of the nested handlers in constructors looks more complicated than I want it to be.
 
 It works, so...
+
+Then decided to change from Chain of Responsibility to a Rules Design Pattern which the test help me do it short time to ensure the refactor was successful. (this part took about 10 minutes)
